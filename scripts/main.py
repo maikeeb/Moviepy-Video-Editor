@@ -33,16 +33,15 @@ for (dirpath, dirnames, filenames) in walk('../currentVideos/'):
         print(file)
         clips.append(c("../currentVideos/" + file))
 
+# init of all the window and the background
 pygame.init()
-
 pygame.display.set_caption('Video Editor')
 window_surface = pygame.display.set_mode((800, 600))
-
 background = pygame.Surface((800, 600))
 background.fill(pygame.Color('#000000'))
-
 manager = pygame_gui.UIManager((800, 600))
 
+# setting of the buttons in memory
 import_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 100), (100, 50)),
                                              text='Import',
                                              manager=manager)
@@ -51,15 +50,13 @@ export_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((600, 100
                                              text='Export',
                                              manager=manager)
 
-export_button.unfocus()
-clock = pygame.time.Clock()
 is_running = True
 
-while is_running:
-    time_delta = clock.tick(60) / 1000.0
 
-    # events
-    for event in pygame.event.get():
+# event handler
+def event_handler(events):
+    global is_running
+    for event in events:
         if event.type == pygame.QUIT:
             is_running = False
 
@@ -77,14 +74,27 @@ while is_running:
                     clipT = threading.Thread(target=render, args=(clips, "hello"))
                     clipT.start()
                     clipT.join()
-
         manager.process_events(event)
 
-    manager.update(time_delta)
 
+def process():
+    pass
+
+
+def drawer():
     # drawing, order from bottom to top
     window_surface.blit(background, (0, 0))
     pygame.draw.line(window_surface, (255, 255, 255), (1, 1), (799, 599), 10)
     manager.draw_ui(window_surface)
 
     pygame.display.update()
+
+
+clock = pygame.time.Clock()
+
+while is_running:
+    time_delta = clock.tick(60) / 1000.0
+    event_handler(pygame.event.get())
+    process()
+    manager.update(time_delta)
+    drawer()
