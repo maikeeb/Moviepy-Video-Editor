@@ -3,3 +3,5 @@ venv
 testing things
 __pycache__
 .gitignore
+.mp4
+.mp3
