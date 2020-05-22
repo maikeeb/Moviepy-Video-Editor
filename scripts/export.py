@@ -7,7 +7,8 @@ def render(videos, name):
         L.append(video.render())
     print(L)
     final_clip = [CompositeVideoClip(L)]
-    concatenate_videoclips(final_clip, padding=-1).write_videofile(
+    print(final_clip)
+    concatenate_videoclips(L, padding=-1).write_videofile(
         "..\\finalVideos\\%s.mp4" % name,
         remove_temp=True, threads=4)
 

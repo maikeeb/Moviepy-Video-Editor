@@ -31,5 +31,6 @@ if __name__ == "__main__":
     from export import render
 
     a = Clip('../currentVideos/out.mp4')
+    b = Clip('../currentVideos/out.mp4')
     a.text_overlay("hello", 10, 10)
-    render([a], "hello")
+    render([a,b], "hello")
