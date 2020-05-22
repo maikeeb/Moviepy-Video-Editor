@@ -6,6 +6,7 @@ import threading
 from threading import Thread
 from ClipClass import Clip as c
 from os import walk
+import os
 
 clips = []
 
@@ -25,6 +26,12 @@ class ThreadWithReturnValue(Thread):
         Thread.join(self, *args)
         return self._return
 
+
+# checks if  currentVideos and finalVideos are there and if not creates them
+folders = ['../currentVideos', '../finalVideos']
+for folder in folders:
+    if not os.path.isdir(folder):
+        os.mkdir(folder)
 
 # gets the videos already in the current video file and makes clip classes for them
 for (dirpath, dirnames, filenames) in walk('../currentVideos/'):
@@ -84,11 +91,8 @@ def process():
     totalDuration = 0
     for video in clips:
         totalDuration += video.video.duration
-    print(totalDuration)
     seconds = round(totalDuration % 60)
-    print(seconds)
     minutes = round(totalDuration / 60)
-    print(minutes)
     textsurface = myfont.render(str(minutes) + ":" + (str(seconds) if len(str(seconds)) == 2 else "0" + str(seconds)),
                                 False, (255, 255, 255))
 
