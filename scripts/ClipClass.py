@@ -27,9 +27,14 @@ class Clip:
             return self.video
 
 
+# https://stackoverflow.com/questions/35067777/moviepy-create-multiple-subclips-using-times-from-csv-file
+# learn how make subclips and a second layer for edits that aren't attached to one video
+
+
 if __name__ == "__main__":
     from export import render
+
     a = Clip('../currentVideos/out.mp4')
     b = Clip('../currentVideos/out.mp4')
     a.text_overlay("hello", 10, 10)
-    render([a,b], "hello")
+    render([a, b], "hello")
