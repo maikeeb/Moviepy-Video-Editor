@@ -35,11 +35,16 @@ for (dirpath, dirnames, filenames) in walk('../currentVideos/'):
 
 # init of all the window and the background
 pygame.init()
+
 pygame.display.set_caption('Video Editor')
 window_surface = pygame.display.set_mode((800, 600))
 background = pygame.Surface((800, 600))
 background.fill(pygame.Color('#000000'))
 manager = pygame_gui.UIManager((800, 600))
+
+# init for text
+pygame.font.init()
+myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 # setting of the buttons in memory
 import_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 100), (100, 50)),
@@ -78,13 +83,25 @@ def event_handler(events):
 
 
 def process():
-    pass
+    global textsurface
+    totalDuration = 0
+    for video in clips:
+        totalDuration += video.video.duration
+    print(totalDuration)
+    seconds = round(totalDuration % 60)
+    print(seconds)
+    minutes = round(totalDuration / 60)
+    print(minutes)
+    textsurface = myfont.render(str(minutes) + ":" + (str(seconds) if len(str(seconds)) == 2 else "0" + str(seconds)),
+                                False, (255, 255, 255))
 
 
 def drawer():
     # drawing, order from bottom to top
     window_surface.blit(background, (0, 0))
-    pygame.draw.line(window_surface, (255, 255, 255), (1, 1), (799, 599), 10)
+    window_surface.blit(textsurface, (700, 300))
+    pygame.draw.line(window_surface, (255, 255, 255), (100, 500), (700, 500), 10)
+
     manager.draw_ui(window_surface)
 
     pygame.display.update()
