@@ -5,6 +5,7 @@ def render(videos, name):
     L = []
     for video in videos:
         L.append(video.render())
+    print(L)
     final_clip = [CompositeVideoClip(L)]
     concatenate_videoclips(final_clip, padding=-1).write_videofile(
         "..\\finalVideos\\%s.mp4" % name,

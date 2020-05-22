@@ -28,4 +28,8 @@ class Clip:
 
 
 if __name__ == "__main__":
-    Clip('../finalVideos/clip1.mp4')
+    from export import render
+
+    a = Clip('../currentVideos/out.mp4')
+    a.text_overlay("hello", 10, 10)
+    render([a], "hello")
