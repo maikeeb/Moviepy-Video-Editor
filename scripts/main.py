@@ -35,7 +35,6 @@ for (dirpath, dirnames, filenames) in walk('../currentVideos/'):
 
 # init of all the window and the background
 pygame.init()
-
 pygame.display.set_caption('Video Editor')
 window_surface = pygame.display.set_mode((800, 600))
 background = pygame.Surface((800, 600))
@@ -64,7 +63,6 @@ def event_handler(events):
     for event in events:
         if event.type == pygame.QUIT:
             is_running = False
-
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == import_button:
@@ -74,7 +72,6 @@ def event_handler(events):
                         clips.append(c(clipT.join()))
                     except AttributeError:
                         pass
-
                 elif event.ui_element == export_button:
                     clipT = threading.Thread(target=render, args=(clips, "hello"))
                     clipT.start()
@@ -101,9 +98,7 @@ def drawer():
     window_surface.blit(background, (0, 0))
     window_surface.blit(textsurface, (700, 300))
     pygame.draw.line(window_surface, (255, 255, 255), (100, 500), (700, 500), 10)
-
     manager.draw_ui(window_surface)
-
     pygame.display.update()
 
 
