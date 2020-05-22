@@ -2,9 +2,7 @@ from moviepy.editor import *
 
 
 def render(videos, name):
-    L = []
-    for video in videos:
-        L.append(video.render())
+    L = [video.render() for video in videos]
     concatenate_videoclips(L, padding=-1).write_videofile(
         "..\\finalVideos\\%s.mp4" % name,
         remove_temp=True, threads=4)
