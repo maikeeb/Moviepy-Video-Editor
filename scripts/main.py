@@ -9,6 +9,7 @@ from os import walk
 import os
 
 clips = []
+totalD = 0
 
 
 class ThreadWithReturnValue(Thread):
@@ -40,6 +41,9 @@ for (dirpath, dirnames, filenames) in walk('../currentVideos/'):
         print(file)
         clips.append(c("../currentVideos/" + file))
 
+for clip in clips:
+    totalD += clip.video.duration
+
 # init of all the window and the background
 pygame.init()
 pygame.display.set_caption('Video Editor')
@@ -61,10 +65,24 @@ export_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((600, 100
                                              text='Export',
                                              manager=manager)
 
-is_running = True
+buttons = []
+durationPointerOld = 100
+durationPointerNew = 100
+for clip in clips:
+    x = clip.video.duration
+    durationPointerNew += (x / totalD) * 600
+    print(durationPointerOld, durationPointerNew, x, x / totalD, clip.video.filename.split("/")[-1])
+    buttons.append(
+        pygame_gui.elements.UIButton(relative_rect=pygame.Rect((durationPointerOld, 400), (durationPointerNew, 430)),
+                                     text=clip.video.filename.split("/")[-1],
+                                     manager=manager))
+    durationPointerOld = durationPointerNew
+
+    is_running = True
+
+    # event handler
 
 
-# event handler
 def event_handler(events):
     global is_running
     for event in events:
@@ -102,6 +120,7 @@ def drawer():
     window_surface.blit(background, (0, 0))
     window_surface.blit(textsurface, (700, 300))
     pygame.draw.line(window_surface, (255, 255, 255), (100, 500), (700, 500), 10)
+
     manager.draw_ui(window_surface)
     pygame.display.update()
 
