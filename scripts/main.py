@@ -72,8 +72,8 @@ for clip in clips:
     x = clip.video.duration
     durationPointerNew += (x / totalD) * 600
     print(durationPointerOld, durationPointerNew, x, x / totalD, clip.video.filename.split("/")[-1])
-    buttons.append(
-        pygame_gui.elements.UIButton(relative_rect=pygame.Rect((durationPointerOld, 400), (durationPointerNew, 430)),
+    buttons.append(  # first point           # change from new point
+        pygame_gui.elements.UIButton(relative_rect=pygame.Rect((durationPointerOld, 400), ((x / totalD) * 600, 30)),
                                      text=clip.video.filename.split("/")[-1],
                                      manager=manager))
     durationPointerOld = durationPointerNew
@@ -101,6 +101,11 @@ def event_handler(events):
                     clipT = threading.Thread(target=render, args=(clips, "hello"))
                     clipT.start()
                     clipT.join()
+
+            if event.user_type == pygame_gui.UI_BUTTON_ON_HOVERED:
+                if event.ui_element in buttons:
+                    print('Test button hovered')
+
         manager.process_events(event)
 
 
