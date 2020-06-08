@@ -10,6 +10,7 @@ import os
 
 clips = []
 totalD = 0
+currentlyDragging = ""
 
 
 class ThreadWithReturnValue(Thread):
@@ -84,7 +85,7 @@ for clip in clips:
 
 
 def event_handler(events):
-    global is_running
+    global is_running, currentlyDragging
     for event in events:
         if event.type == pygame.QUIT:
             is_running = False
@@ -102,15 +103,18 @@ def event_handler(events):
                     clipT.start()
                     clipT.join()
 
-            if event.user_type == pygame_gui.UI_BUTTON_ON_HOVERED:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element in buttons:
-                    print('Test button hovered')
+                    print('clicked')
+                    currentlyDragging = event.ui_element
 
         manager.process_events(event)
 
 
 def process():
-    global textsurface
+    global textsurface, currentlyDragging
+
+    # finds out the total time and then sets up the text
     totalDuration = 0
     for video in clips:
         totalDuration += video.video.duration
@@ -118,6 +122,11 @@ def process():
     minutes = round(totalDuration / 60)
     textsurface = myfont.render(str(minutes) + ":" + (str(seconds) if len(str(seconds)) == 2 else "0" + str(seconds)),
                                 False, (255, 255, 255))
+
+    # handles dragging around videos
+
+    if currentlyDragging != "":
+        currentlyDragging.set_position(pygame.mouse.get_pos())
 
 
 def drawer():
