@@ -67,21 +67,34 @@ export_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((600, 100
                                              manager=manager)
 
 buttons = []
-durationPointerOld = 100
-durationPointerNew = 100
-for clip in clips:
-    x = clip.video.duration
-    durationPointerNew += (x / totalD) * 600
-    print(durationPointerOld, durationPointerNew, x, x / totalD, clip.video.filename.split("/")[-1])
-    buttons.append(  # first point           # change from new point
-        pygame_gui.elements.UIButton(relative_rect=pygame.Rect((durationPointerOld, 400), ((x / totalD) * 600, 30)),
-                                     text=clip.video.filename.split("/")[-1],
-                                     manager=manager))
-    durationPointerOld = durationPointerNew
 
-    is_running = True
 
-    # event handler
+def drawbuttons():
+    global buttons
+    for button in buttons:
+        button.kill()
+    buttons = []
+    durationPointerOld = 100
+    durationPointerNew = 100
+    for clip in clips:
+        x = clip.video.duration
+        durationPointerNew += (x / totalD) * 600
+        print(durationPointerOld, durationPointerNew, x, x / totalD, clip.video.filename.split("/")[-1])
+        buttons.append(  # first point           # change from new point
+            pygame_gui.elements.UIButton(relative_rect=pygame.Rect((durationPointerOld, 400), ((x / totalD) * 600, 30)),
+                                         text=clip.video.filename.split("/")[-1],
+                                         manager=manager))
+        durationPointerOld = durationPointerNew
+
+        # pygame_gui.elements.UIButton().kill()
+
+
+drawbuttons()
+
+is_running = True
+
+
+# event handler
 
 
 def event_handler(events):
@@ -105,8 +118,33 @@ def event_handler(events):
 
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element in buttons:
-                    print('clicked')
-                    currentlyDragging = event.ui_element
+
+                    if currentlyDragging != "":  # finds the new position with the mouse position then moves clip
+                        print("second click")
+                        current = pygame.mouse.get_pos()[0]
+                        lastsmaller = [True, 0]  # need to find 2 buttons your in between  to find new place
+                        nowbigger = [False, 0]
+                        for button in buttons:
+                            if button.rect.x < current:
+                                nowbigger = [True, buttons.index(button)]
+                            else:
+                                nowbigger[0] = False
+                            print(lastsmaller[0], nowbigger[0])
+                            if lastsmaller[0] and nowbigger[0]:
+                                print(nowbigger[1], buttons.index(currentlyDragging))
+                                clips.insert(nowbigger[1], clips.pop(buttons.index(currentlyDragging)))
+                                drawbuttons()
+                                currentlyDragging = ''
+                                break
+                            if button.rect.x > current:
+                                lastsmaller = [True, buttons.index(button)]
+                            else:
+                                lastsmaller[0] = False
+
+
+                    else:
+                        print('clicked')
+                        currentlyDragging = event.ui_element
 
         manager.process_events(event)
 
@@ -126,7 +164,7 @@ def process():
     # handles dragging around videos
 
     if currentlyDragging != "":
-        currentlyDragging.set_position(pygame.mouse.get_pos())
+        currentlyDragging.set_position((pygame.mouse.get_pos()[0] - 10, pygame.mouse.get_pos()[1] - 10))
 
 
 def drawer():
