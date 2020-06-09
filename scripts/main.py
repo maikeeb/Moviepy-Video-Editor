@@ -123,27 +123,31 @@ def event_handler(events):
                         print("second click")
                         current = pygame.mouse.get_pos()[0]
                         print(current)
-                        lastsmaller = [True, 0]  # need to find 2 buttons your in between  to find new place
-                        nowbigger = [False, 0]
+                        lastbigger = [False, 0]  # need to find 2 buttons your in between  to find new place
+                        nowsmaller = [False, 0]
                         for button in buttons:
                             print(button.text, buttons.index(button))
-                            if button.rect.x < current:
-                                nowbigger = [True, buttons.index(button)]
+
+                            if button.rect.x > current:
+                                nowsmaller = [True, buttons.index(button)]
                             else:
-                                nowbigger[0] = False
-                            print(lastsmaller[0], nowbigger[0])
-                            print(lastsmaller[1], nowbigger[1])
-                            if lastsmaller[0] and nowbigger[0]:
-                                print(nowbigger[1], currentlyDraggingIndex)
-                                clips.insert(nowbigger[1], clips.pop(currentlyDraggingIndex))
+                                nowsmaller[0] = False
+                            print(lastbigger[0], nowsmaller[0])
+                            print(lastbigger[1], nowsmaller[1])
+                            if lastbigger[0] and nowsmaller[0]:
+                                print(nowsmaller[1], currentlyDraggingIndex)
+                                clips.insert(
+                                    (nowsmaller[0]) if nowsmaller[1] > currentlyDraggingIndex else (nowsmaller[0]-1),
+                                    clips.pop(currentlyDraggingIndex))
                                 drawbuttons()
                                 currentlyDragging.kill()
                                 currentlyDragging = ''
                                 break
-                            if button.rect.x > current:
-                                lastsmaller = [True, buttons.index(button)]
+                            if button.rect.x < current:
+                                lastbigger = [True, buttons.index(button)]
                             else:
-                                lastsmaller[0] = False
+                                lastbigger[0] = False
+
 
                     else:
                         print('clicked')
