@@ -36,6 +36,7 @@ for folder in folders:
         os.mkdir(folder)
 
 # gets the videos already in the current video file and makes clip classes for them
+print("setting up clips for editing")
 for (dirpath, dirnames, filenames) in walk('../currentVideos/'):
     print("hello")
     for file in filenames:
@@ -86,7 +87,7 @@ def drawbuttons():
                                          manager=manager))
         durationPointerOld = durationPointerNew
 
-        # pygame_gui.elements.UIButton().kill()
+        # pygame_gui.elements.UIButton()
 
 
 drawbuttons()
@@ -98,7 +99,7 @@ is_running = True
 
 
 def event_handler(events):
-    global is_running, currentlyDragging
+    global is_running, currentlyDragging, currentlyDraggingIndex, currentlyClip
     for event in events:
         if event.type == pygame.QUIT:
             is_running = False
@@ -117,23 +118,26 @@ def event_handler(events):
                     clipT.join()
 
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element in buttons:
-
+                if event.ui_element in buttons or event.ui_element == currentlyDragging:
                     if currentlyDragging != "":  # finds the new position with the mouse position then moves clip
                         print("second click")
                         current = pygame.mouse.get_pos()[0]
+                        print(current)
                         lastsmaller = [True, 0]  # need to find 2 buttons your in between  to find new place
                         nowbigger = [False, 0]
                         for button in buttons:
+                            print(button.text, buttons.index(button))
                             if button.rect.x < current:
                                 nowbigger = [True, buttons.index(button)]
                             else:
                                 nowbigger[0] = False
                             print(lastsmaller[0], nowbigger[0])
+                            print(lastsmaller[1], nowbigger[1])
                             if lastsmaller[0] and nowbigger[0]:
-                                print(nowbigger[1], buttons.index(currentlyDragging))
-                                clips.insert(nowbigger[1], clips.pop(buttons.index(currentlyDragging)))
+                                print(nowbigger[1], currentlyDraggingIndex)
+                                clips.insert(nowbigger[1], clips.pop(currentlyDraggingIndex))
                                 drawbuttons()
+                                currentlyDragging.kill()
                                 currentlyDragging = ''
                                 break
                             if button.rect.x > current:
@@ -141,10 +145,13 @@ def event_handler(events):
                             else:
                                 lastsmaller[0] = False
 
-
                     else:
                         print('clicked')
                         currentlyDragging = event.ui_element
+                        currentlyDraggingIndex = buttons.index(currentlyDragging)
+                        currentlyClip = clips[currentlyDraggingIndex]
+                        buttons.remove(currentlyDragging)
+                        print(currentlyDragging, currentlyDraggingIndex)
 
         manager.process_events(event)
 
@@ -164,7 +171,7 @@ def process():
     # handles dragging around videos
 
     if currentlyDragging != "":
-        currentlyDragging.set_position((pygame.mouse.get_pos()[0] - 10, pygame.mouse.get_pos()[1] - 10))
+        currentlyDragging.set_position((pygame.mouse.get_pos()[0] - 4, pygame.mouse.get_pos()[1] - 4))
 
 
 def drawer():

@@ -4,7 +4,8 @@ from moviepy.editor import *
 class Clip:
     def __init__(self, filepath):
         self.video = VideoFileClip(filepath)
-        self.composite_list = [VideoFileClip(filepath)]
+        self.video.size = (1920, 1080)
+        self.composite_list = [self.video]
 
     def fadein(self):
         self.video = self.video.fadein(0.5)
