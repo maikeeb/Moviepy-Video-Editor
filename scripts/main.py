@@ -1,6 +1,6 @@
 import pygame
 import pygame_gui
-from newClip import clip
+from newClip import newclip
 from export import render
 import threading
 from threading import Thread
@@ -25,7 +25,7 @@ class ThreadWithReturnValue(Thread):
                                         **self._kwargs)
 
     def join(self, *args):
-        Thread.join(self, *args)
+        clip.join(self, *args)
         return self._return
 
 
@@ -110,12 +110,17 @@ def event_handler(events):
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == import_button:
-                    clipT = ThreadWithReturnValue(target=clip)
+                    print('1')
+                    clipT = ThreadWithReturnValue(target=newclip)
+                    print('2')
                     clipT.start()
-                    try: 
+                    print('3')
+                    try:
                         clips.append(c(clipT.join()))
+                        print('4')
                     except AttributeError:
                         pass
+                    drawbuttons()
                 elif event.ui_element == export_button:
                     clipT = threading.Thread(target=render, args=(clips, box.get_text()))
                     clipT.start()
