@@ -69,6 +69,10 @@ export_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((600, 100
 
 buttons = []
 
+# export name input box
+box = pygame_gui.elements.ui_text_entry_line.UITextEntryLine(relative_rect=pygame.Rect((500, 200), (200, 200)),
+                                                             manager=manager)
+
 
 def drawbuttons():
     global buttons
@@ -108,12 +112,12 @@ def event_handler(events):
                 if event.ui_element == import_button:
                     clipT = ThreadWithReturnValue(target=clip)
                     clipT.start()
-                    try:
+                    try: 
                         clips.append(c(clipT.join()))
                     except AttributeError:
                         pass
                 elif event.ui_element == export_button:
-                    clipT = threading.Thread(target=render, args=(clips, "hello"))
+                    clipT = threading.Thread(target=render, args=(clips, box.get_text()))
                     clipT.start()
                     clipT.join()
 
@@ -137,7 +141,7 @@ def event_handler(events):
                             if lastbigger[0] and nowsmaller[0]:
                                 print(nowsmaller[1], currentlyDraggingIndex)
                                 clips.insert(
-                                    (nowsmaller[0]) if nowsmaller[1] > currentlyDraggingIndex else (nowsmaller[0]-1),
+                                    (nowsmaller[0]) if nowsmaller[1] > currentlyDraggingIndex else (nowsmaller[0] - 1),
                                     clips.pop(currentlyDraggingIndex))
                                 drawbuttons()
                                 currentlyDragging.kill()
@@ -147,7 +151,6 @@ def event_handler(events):
                                 lastbigger = [True, buttons.index(button)]
                             else:
                                 lastbigger[0] = False
-
 
                     else:
                         print('clicked')
