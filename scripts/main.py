@@ -25,7 +25,7 @@ class ThreadWithReturnValue(Thread):
                                         **self._kwargs)
 
     def join(self, *args):
-        clip.join(self, *args)
+        Thread.join(self, *args)
         return self._return
 
 
@@ -43,8 +43,7 @@ for (dirpath, dirnames, filenames) in walk('../currentVideos/'):
         print(file)
         clips.append(c("../currentVideos/" + file))
 
-for clip in clips:
-    totalD += clip.video.duration
+
 
 # init of all the window and the background
 pygame.init()
@@ -75,10 +74,14 @@ box = pygame_gui.elements.ui_text_entry_line.UITextEntryLine(relative_rect=pygam
 
 
 def drawbuttons():
-    global buttons
+    global buttons, totalD
+
     for button in buttons:
         button.kill()
     buttons = []
+    totalD = 0
+    for clip in clips:
+        totalD += clip.video.duration
     durationPointerOld = 100
     durationPointerNew = 100
     for clip in clips:
@@ -119,7 +122,7 @@ def event_handler(events):
                         clips.append(c(clipT.join()))
                         print('4')
                     except AttributeError:
-                        pass
+                        clips.append(c(clipT.join()))
                     drawbuttons()
                 elif event.ui_element == export_button:
                     clipT = threading.Thread(target=render, args=(clips, box.get_text()))

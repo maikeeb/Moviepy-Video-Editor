@@ -2,6 +2,8 @@ from tkinter import filedialog
 from tkinter import *
 import shutil
 from time import sleep
+import os
+
 
 def newclip():
     root = Tk()
@@ -13,7 +15,8 @@ def newclip():
     # return root.filename
     if root.filename != "":
         shutil.move(file, "../currentVideos/" + file.split("/")[-1])
-        sleep(3)
+        while not os.path.exists("../currentVideos/" + file.split("/")[-1]):
+            sleep(1)
         return "../currentVideos/" + file.split("/")[-1]
     else:
         print("No file selected")
