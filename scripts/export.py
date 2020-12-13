@@ -3,7 +3,8 @@ from moviepy.editor import *
 
 def render(videos, name):
     L = [video.render() for video in videos]
-    concatenate_videoclips(L, padding=-1).write_videofile(
+    composite = [CompositeVideoClip(L)]
+    concatenate_videoclips(composite, padding=-1).write_videofile(
         "..\\finalVideos\\%s.mp4" % name,
         remove_temp=True, threads=4)
 

@@ -43,8 +43,6 @@ for (dirpath, dirnames, filenames) in walk('../currentVideos/'):
         print(file)
         clips.append(c("../currentVideos/" + file))
 
-
-
 # init of all the window and the background
 pygame.init()
 pygame.display.set_caption('Video Editor')
@@ -127,7 +125,7 @@ def event_handler(events):
                 elif event.ui_element == export_button:
                     clipT = threading.Thread(target=render, args=(clips, box.get_text()))
                     clipT.start()
-                    clipT.join()
+                    # clipT.join()
 
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element in buttons or event.ui_element == currentlyDragging:

@@ -22,10 +22,10 @@ class Clip:
 
     def render(self):
         print(len(self.composite_list))
-        if len(self.composite_list) > 1:
+        """if len(self.composite_list) > 1:
             return CompositeVideoClip(self.composite_list)
-        else:
-            return self.video
+        else:"""
+        return self.video
 
 
 # https://stackoverflow.com/questions/35067777/moviepy-create-multiple-subclips-using-times-from-csv-file
@@ -35,7 +35,7 @@ class Clip:
 if __name__ == "__main__":
     from export import render
 
-    a = Clip('../currentVideos/out.mp4')
-    b = Clip('../currentVideos/out.mp4')
+    a = Clip('../currentVideos/33hiko0.mp4')
+    b = Clip('../currentVideos/40hiko0.mp4')
     a.text_overlay("hello", 10, 10)
     render([a, b], "hello")
